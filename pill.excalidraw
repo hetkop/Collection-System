@@ -1,1 +1,100 @@
+%%{init: {"flowchart": {"defaultRenderer": "elk"}}}%%
+flowchart TD
 
+    T1["Система сбора и утилизации просроченных лекарств"]
+    T2["Экологически безопасный сбор медицинских отходов у населения: карта пунктов приема, учет логистики и эко-просвещение"]
+
+    T1 -.-> T2
+
+    subgraph ARCH["Архитектура"]
+        direction TB
+        FE["FE — Интерфейс"]
+        BE["BE — Серверная часть"]
+        DB["PostgreSQL — БД"]
+        FE ~~~ BE ~~~ DB
+    end
+
+    T2 --> ARCH
+
+    subgraph STRUCT[" "]
+        direction LR
+
+        subgraph C1[" "]
+            direction TB
+            H1["1. Пункты приема и карта"]
+            A1["Интерактивная карта пунктов; поиск аптек; фильтрация по типам принимаемых отходов"]
+            B1["API: GET /points; GET /points/{id}; POST /points/check-in"]
+            D1["CollectionPoint: lat, lng, address, pharmacy_name, status"]
+            H1 ~~~ A1 ~~~ B1 ~~~ D1
+        end
+
+        subgraph C2[" "]
+            direction TB
+            H2["2. Учет и логистика отходов"]
+            A2["Интерфейс для аптек (вес бака); заявки на вывоз отходов; трекинг курьеров/утилизаторов"]
+            B2["Регистрация заполнения баков; генерация накладных; изменение статусов контейнеров"]
+            D2["WasteOrder, DisposalContainer, LogisticsRoute"]
+            H2 ~~~ A2 ~~~ B2 ~~~ D2
+        end
+
+        subgraph C3[" "]
+            direction TB
+            H3["3. Личный кабинет и Эко-бонусы"]
+            A3["Прогресс сданных лекарств; начисление бонусов/скидок; qr-код для аптеки"]
+            B3["Управление профилем; логика бонусной системы; генерация и валидация QR-кодов"]
+            D3["UserProfile, BonusTransaction, UserMedicationLog"]
+            H3 ~~~ A3 ~~~ B3 ~~~ D3
+        end
+
+        subgraph C4[" "]
+            direction TB
+            H4["4. Аналитика и отчетность"]
+            A4["Дашборд администратора; объемы сбора по регионам; графики эффективности утилизации"]
+            B4["Агрегация данных о массе отходов; прогнозирование заполнения; экспорт эко-отчетов"]
+            D4["AnalyticalReport, WasteStatistics, ActionLog"]
+            H4 ~~~ A4 ~~~ B4 ~~~ D4
+        end
+
+        subgraph C5[" "]
+            direction TB
+            H5["5. Просветительская кампания"]
+            A5["Справочник: что можно сдавать; статьи об опасности лекарств; уведомления и памятки"]
+            B5["API базы знаний; управление контентом (CMS); рассылка пуш-уведомлений"]
+            D5["EduArticle, Category, GuideTag, Notification"]
+            H5 ~~~ A5 ~~~ B5 ~~~ D5
+        end
+
+        C1 ~~~ C2 ~~~ C3 ~~~ C4 ~~~ C5
+    end
+
+    ARCH -->|Структура системы| STRUCT
+
+    subgraph FOOT[" "]
+        direction LR
+        P1["Проблема: Отсутствие инфраструктуры, загрязнение окружающей среды"]
+        P2["Предлагаемое решение: Установка контейнеров в аптеках, карта пунктов приема, просветительская кампания"]
+        P3["Тема проекта: Система сбора и утилизации просроченных лекарств"]
+        P1 ~~~ P2 ~~~ P3
+    end
+
+    STRUCT --> FOOT
+
+    %% ===== Цвета =====
+    classDef navy fill:#1e293b,stroke:#e2e8f0,color:#ffffff
+    classDef dark fill:#1e1e1e,stroke:#e2e8f0,color:#ffffff
+    classDef green fill:#2f4a32,stroke:#e2e8f0,color:#ffffff
+    classDef brown fill:#4a3b1a,stroke:#e2e8f0,color:#ffffff
+
+    class T1,T2,H1,H2,H3,H4,H5 navy
+    class DB,A1,B1,D1,A2,B2,D2,A3,B3,D3,A4,B4,D4,A5,B5,D5,P1,P2,P3 dark
+    class FE green
+    class BE brown
+
+    style ARCH fill:#a5d8ff,stroke:#1e1e1e,color:#1e1e1e
+    style STRUCT fill:#a5d8ff,stroke:#1e1e1e,color:#1e1e1e
+    style FOOT fill:#a5d8ff,stroke:#1e1e1e,color:#1e1e1e
+    style C1 fill:none,stroke:none
+    style C2 fill:none,stroke:none
+    style C3 fill:none,stroke:none
+    style C4 fill:none,stroke:none
+    style C5 fill:none,stroke:none
